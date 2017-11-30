@@ -66,6 +66,12 @@ systemctl stop docker
 sudo dockerd -H tcp://0.0.0.0:2375
 ```
 
+5. To verify the installation, on your local machine run:
+```
+export DOCKER_HOST=tcp://<ip address of the VM:2375
+docker run hello-world
+```
+
 Change the application
 ----
 
