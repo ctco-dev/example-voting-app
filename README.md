@@ -30,7 +30,7 @@ Download [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 1. Download [python](https://sourceforge.net/projects/winpython/files/WinPython_2.7/2.7.13.1/).
 2. Run the installation, and add `python-2.7.13.amd64` and `python-2.7.13.amd64/Scripts` to PATH.
 3. Run `pip install azure-cli`.
-4. Run `az --version` to verify the installation.
+4. Login into Azure by running `az login` and following the procedure.
 
 Run application
 ------
@@ -49,21 +49,42 @@ az group create --name $NAMESPACE-docker --location westeurope
 2. Create a Virtual Machine:
 
 ```
-vm create --resource-group $NAMESPACE-docker --name $NAMESPACE-docker --image UbuntuLTS --admin-username dev --admin-password <password>
+az vm create --resource-group $NAMESPACE-docker --name $NAMESPACE-docker --image UbuntuLTS --admin-username dev --admin-password DockerDocker-1
 ```
+**Note the public IP of the VM**. Also note the user name and the password.
+
 3. Open the required ports on the VM:
 ```
-az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 80
+az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 80 --priority 900
 az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 2375 --priority 800
 az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 5000-5001 --priority 700
 ```
-4. SSH into the VM to install Docker:
+4. SSH into the VM to install and run the Docker daemon:
 ```
-ssh into vm	
 sudo apt install aufs-tools docker.io
 systemctl stop docker
 sudo dockerd -H tcp://0.0.0.0:2375
 ```
+
+Change the application
+----
+
+TODO
+
+Publish the application
+----
+
+TODO
+
+Deploy the application
+----
+
+TODO
+
+Clean up resources
+----
+
+TODO
 
 Note
 ----
