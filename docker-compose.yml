@@ -46,9 +46,6 @@ services:
     networks:
       - back-tier
 
-#volumes:
-#  db-data:
-
 networks:
   front-tier:
   back-tier:
