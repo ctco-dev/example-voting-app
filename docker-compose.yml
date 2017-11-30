@@ -35,6 +35,13 @@ services:
   worker:
     build:
       context: ./worker
+    environment:
+      - REDIS_HOST
+      - REDIS_PASSWORD
+      - REDIS_PORT
+      - POSTGRES_HOST
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
     networks:
       - back-tier
     depends_on:
