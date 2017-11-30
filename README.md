@@ -17,6 +17,10 @@ Setup environment
 
 ### Windows
 
+#### Install Git
+
+1. Install [Git](https://git-scm.com/download/win).
+
 #### Install docker client
 1. Download the [docker client](https://download.docker.com/win/static/stable/x86_64/docker-17.09.0-ce.zip), extract the files and copy `docker.exe` to a separate folder.
 2. Download [docker-compose](https://github.com/docker/compose/releases/download/1.17.1/docker-compose-Windows-x86_64.exe), rename it to `docker-compose.exe` and copy to the same folder.
@@ -35,7 +39,7 @@ Download [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 Run application
 ------
 
-To be able to run the application we need first to set up a remote docker host.
+To be able to run the application we need first to set up a remote docker host. Open Git bash and execute the following commands.
 
 1. Set a namespace variable to isolate your resources from others:
 ```bash
