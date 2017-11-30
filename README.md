@@ -15,21 +15,26 @@ Architecture
 Setup environment
 -----
 
-### Windows
+### Create required accounts
 
-#### Install Git
+1. Create a [Microsoft Azure account](https://azure.microsoft.com).
+2. Create a [Docker Hub account](https://hub.docker.com/).
+
+### Install Git
 
 1. Install [Git](https://git-scm.com/download/win).
 
-#### Install docker client
+### Install docker client
+
 1. Download the [docker client](https://download.docker.com/win/static/stable/x86_64/docker-17.09.0-ce.zip), extract the files and copy `docker.exe` to a separate folder.
 2. Download [docker-compose](https://github.com/docker/compose/releases/download/1.17.1/docker-compose-Windows-x86_64.exe), rename it to `docker-compose.exe` and copy to the same folder.
 3. Add the folder containing the docker binaries to PATH.
 
-#### Install Putty
+### Install Putty
+
 Download [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 
-#### Install azure-cli
+### Install azure-cli
 
 1. Download [python](https://sourceforge.net/projects/winpython/files/WinPython_2.7/2.7.13.1/).
 2. Run the installation, and add `python-2.7.13.amd64` and `python-2.7.13.amd64/Scripts` to PATH.
@@ -150,7 +155,30 @@ Restart your applications to verify the changes.
 Publish the application
 ----
 
-TODO
+To deploy the applications to Azure we need to publish the images to Docker Hub first.
+1. Login into Docker Hub by running:
+```
+docker login
+```
+Enter your user name and password.
+2. Create a `docker-compose.override.yml` file:
+```
+version: "3"
+
+services:
+  vote:
+    image: <docker user name>/voting-app-vote
+
+  result:
+    image: <docker user name>/voting-app-result
+
+  worker:
+    image: <docker user name>/voting-app-worker
+```
+3. Publish the images:
+```
+docker-compose push
+```
 
 Deploy the application
 ----
@@ -164,7 +192,7 @@ az appservice plan create --name $NAMESPACE-asp --resource-group $NAMESPACE-dock
 2. Create three applications and configure the required settings:
 ```
 az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-vote \
-    --deployment-container-image-name <docker user>/vote
+    --deployment-container-image-name <docker user>/voting-app-vote
 az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-vote --settings \
     REDIS_HOST=<insert value from .env> \
     REDIS_PASSWORD=<insert value from .env> \
@@ -173,7 +201,7 @@ az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-vote --always-on true
 ```
 ```
 az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-result \
-    --deployment-container-image-name <docker user>/result
+    --deployment-container-image-name <docker user>/voting-app-result
 az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-result --settings \
    POSTGRES_USER=<insert value from .env> \
    POSTGRES_PASSWORD=<insert value from .env>
@@ -181,7 +209,7 @@ az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-result --always-on true
 ```
 ```
 az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-worker \
-    --deployment-container-image-name <docker user>/worker
+    --deployment-container-image-name <docker user>/voting-app-worker
 az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-worker --settings \
     REDIS_HOST=<insert value from .env> \
     REDIS_PASSWORD=<insert value from .env> \
