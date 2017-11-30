@@ -225,7 +225,10 @@ az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-worker --always-on true
 Clean up resources
 ----
 
-TODO
+Once you're done playing around with your application, cleanup all of the resources you've created in Azure:
+```
+az group delete --name $NAMESPACE-docker
+```
 
 Note
 ----
