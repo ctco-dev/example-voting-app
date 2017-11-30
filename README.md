@@ -52,19 +52,19 @@ export NAMESPACE=<your name>
 ```
 2. Create a resource group:
 ```bash
-az group create --name $NAMESPACE-docker --location westeurope
+az group create --name $NAMESPACE --location westeurope
 ```
 3. Create a Virtual Machine:
 
 ```
-az vm create --resource-group $NAMESPACE-docker --name $NAMESPACE-docker --image UbuntuLTS --admin-username dev --admin-password DockerDocker-1
+az vm create --resource-group $NAMESPACE --name $NAMESPACE-docker --image UbuntuLTS --admin-username dev --admin-password DockerDocker-1
 ```
 **Note the public IP of the VM**. Also note the user name and the password.
 4. Open the required ports on the VM:
 ```
-az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 80 --priority 900
-az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 2375 --priority 800
-az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 5000-5001 --priority 700
+az vm open-port -g $NAMESPACE -n $NAMESPACE-docker --port 80 --priority 900
+az vm open-port -g $NAMESPACE -n $NAMESPACE-docker --port 2375 --priority 800
+az vm open-port -g $NAMESPACE- -n $NAMESPACE-docker --port 5000-5001 --priority 700
 ```
 5. SSH into the VM to install and run the Docker daemon:
 ```
@@ -115,12 +115,12 @@ Set up Redis and PostgreSQL on Azure
 ### Setup Redis
 1. Create a Redis instance:
 ```
-az redis create --location westeurope --name $NAMESPACE-redis --resource-group $NAMESPACE-docker --sku Basic --vm-size C0
+az redis create --location westeurope --name $NAMESPACE-redis --resource-group $NAMESPACE --sku Basic --vm-size C0
 ```
 Note the value of the `hostName` property.
 2. Retrieve the password to Redis:
 ```
-az redis list-keys --name $NAMESPACE-redis --resource-group $NAMESPACE-docker
+az redis list-keys --name $NAMESPACE-redis --resource-group $NAMESPACE
 ```
 Note the value of the `primaryKey` property.
 3. Create a `.env` in the root of your project with the following contents:
@@ -134,12 +134,12 @@ REDIS_PORT=6380
 
 1. Create a PostgreSQL instance:
 ```
-az postgres server create --resource-group $NAMESPACE-docker --name $NAMESPACE-postgresql  --location westeurope --admin-user dev --admin-password Postgres-1 --performance-tier Basic --compute-units 50 --version 9.6 --ssl-enforcement Disabled
+az postgres server create --resource-group $NAMESPACE --name $NAMESPACE-postgresql  --location westeurope --admin-user dev --admin-password Postgres-1 --performance-tier Basic --compute-units 50 --version 9.6 --ssl-enforcement Disabled
 ```
 Note the value of the `fullyQualifiedDomainName` and `name` properties.
 2. Allow to connect from any IP:
 ```
-az postgres server firewall-rule create -g $NAMESPACE-docker -s $NAMESPACE-postgresql -n allowall --start-ip-address 0.0.0.0 --end-ip-address 255.255.255.255
+az postgres server firewall-rule create -g $NAMESPACE -s $NAMESPACE-postgresql -n allowall --start-ip-address 0.0.0.0 --end-ip-address 255.255.255.255
 ```
 3. Add the following contents to your `.env` file:
 ```
@@ -187,30 +187,30 @@ Now it's time to deploy the applications to Azure.
 
 1. Create a service plan:
 ```
-az appservice plan create --name $NAMESPACE-asp --resource-group $NAMESPACE-docker --sku S1 --is-linux
+az appservice plan create --name $NAMESPACE-asp --resource-group $NAMESPACE --sku S1 --is-linux
 ```
 2. Create three applications and configure the required settings:
 ```
-az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-vote \
+az webapp create --resource-group $NAMESPACE --plan $NAMESPACE-asp --name $NAMESPACE-vote \
     --deployment-container-image-name <docker user>/voting-app-vote
-az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-vote --settings \
+az webapp config appsettings set -g $NAMESPACE -n $NAMESPACE-vote --settings \
     REDIS_HOST=<insert value from .env> \
     REDIS_PASSWORD=<insert value from .env> \
     REDIS_PORT=6380
-az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-vote --always-on true
+az webapp config set -g $NAMESPACE -n $NAMESPACE-vote --always-on true
 ```
 ```
-az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-result \
+az webapp create --resource-group $NAMESPACE --plan $NAMESPACE-asp --name $NAMESPACE-result \
     --deployment-container-image-name <docker user>/voting-app-result
-az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-result --settings \
+az webapp config appsettings set -g $NAMESPACE- -n $NAMESPACE-result --settings \
    POSTGRES_USER=<insert value from .env> \
    POSTGRES_PASSWORD=<insert value from .env>
-az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-result --always-on true
+az webapp config set -g $NAMESPACE -n $NAMESPACE-result --always-on true
 ```
 ```
-az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-worker \
+az webapp create --resource-group $NAMESPACE --plan $NAMESPACE-asp --name $NAMESPACE-worker \
     --deployment-container-image-name <docker user>/voting-app-worker
-az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-worker --settings \
+az webapp config appsettings set -g $NAMESPACE -n $NAMESPACE-worker --settings \
     REDIS_HOST=<insert value from .env> \
     REDIS_PASSWORD=<insert value from .env> \
     REDIS_PORT=6380 \
@@ -218,7 +218,7 @@ az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-worker --set
     POSTGRES_USER=<insert value from .env> \
     POSTGRES_PASSWORD=<insert value from .env> \
     WEBSITES_CONTAINER_START_TIME_LIMIT=600
-az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-worker --always-on true
+az webapp config set -g $NAMESPACE -n $NAMESPACE-worker --always-on true
 ```
 3. After some time the two frontend applications will be available at `<namespace>-vote.azurewebsites.net` and `<namespace>-result.azurewebsites.net`
 
@@ -227,7 +227,7 @@ Clean up resources
 
 Once you're done playing around with your application, cleanup all of the resources you've created in Azure:
 ```
-az group delete --name $NAMESPACE-docker
+az group delete --name $NAMESPACE
 ```
 
 Note
