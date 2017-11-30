@@ -32,6 +32,39 @@ Download [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 3. Run `pip install azure-cli`.
 4. Run `az --version` to verify the installation.
 
+Run application
+------
+
+To be able to run the application we need first to set up a remote docker host.
+
+1. Set a namespace variable to isolate your resources from others:
+```bash
+export NAMESPACE=<your name>
+```
+
+1. Create a resource group:
+```bash
+az group create --name $NAMESPACE-docker --location westeurope
+```
+2. Create a Virtual Machine:
+
+```
+vm create --resource-group $NAMESPACE-docker --name $NAMESPACE-docker --image UbuntuLTS --admin-username dev --admin-password <password>
+```
+3. Open the required ports on the VM:
+```
+az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 80
+az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 2375 --priority 800
+az vm open-port -g $NAMESPACE-docker -n $NAMESPACE-docker --port 5000-5001 --priority 700
+```
+4. SSH into the VM to install Docker:
+```
+ssh into vm	
+sudo apt install aufs-tools docker.io
+systemctl stop docker
+sudo dockerd -H tcp://0.0.0.0:2375
+```
+
 Note
 ----
 
