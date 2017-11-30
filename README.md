@@ -104,6 +104,35 @@ Note the `--build` argument.
 
 Refresh the application in your browser and make sure, that the changes have been applied correctly.
 
+Set up Redis and PostgreSQL on Azure
+---
+
+### Setup Redis
+1. Create a Redis instance:
+```
+az redis create --location westeurope --name $NAMESPACE-redis --resource-group $NAMESPACE-docker --sku Basic --vm-size C0
+```
+Note the value of the `hostName` property.
+2. Retrieve the password to Redis:
+```
+az redis list-keys --name $NAMESPACE-redis --resource-group $NAMESPACE-docker
+```
+Note the value of the `primaryKey` property.
+3. Create a `.env` in the root of your project with the following contents:
+```
+REDIS_HOST=<host name>
+REDIS_PASSWORD=<primary key>
+REDIS_PORT=6380
+```
+
+### Setup PostgreSQL
+
+TODO
+
+### Test
+
+TODO
+
 Publish the application
 ----
 

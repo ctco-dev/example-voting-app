@@ -4,6 +4,10 @@ services:
   vote:
     build: ./vote
     command: python app.py
+    environment:
+      - REDIS_HOST
+      - REDIS_PASSWORD
+      - REDIS_PORT
     ports:
       - "5000:80"
     networks:
