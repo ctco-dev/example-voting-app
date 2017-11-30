@@ -92,7 +92,17 @@ The voting application will be available at `http://<your VM's IP>:5000` and the
 Change the application
 ----
 
-TODO
+The next step would be to change the application from a cat-dog vote to a Java-Node vote.
+
+1. Stop the running application by pressing Ctrl+C.
+2. Open `vote/app.py` and replace all occurrences of `Cats` with `Java` and `Dogs` with `Node`. Do the same for `result/views/index.html`.
+3. Start the application by running:
+```
+docker-compose up --build
+```
+Note the `--build` argument.
+
+Refresh the application in your browser and make sure, that the changes have been applied correctly.
 
 Publish the application
 ----
