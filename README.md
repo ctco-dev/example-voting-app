@@ -155,7 +155,44 @@ TODO
 Deploy the application
 ----
 
-TODO
+Now it's time to deploy the applications to Azure.
+
+1. Create a service plan:
+```
+az appservice plan create --name $NAMESPACE-asp --resource-group $NAMESPACE-docker --sku S1 --is-linux
+```
+2. Create three applications and configure the required settings:
+```
+az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-vote \
+    --deployment-container-image-name <docker user>/vote
+az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-vote --settings \
+    REDIS_HOST=<insert value from .env> \
+    REDIS_PASSWORD=<insert value from .env> \
+    REDIS_PORT=6380
+az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-vote --always-on true
+```
+```
+az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-result \
+    --deployment-container-image-name <docker user>/result
+az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-result --settings \
+   POSTGRES_USER=<insert value from .env> \
+   POSTGRES_PASSWORD=<insert value from .env>
+az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-result --always-on true
+```
+```
+az webapp create --resource-group $NAMESPACE-docker --plan $NAMESPACE-asp --name $NAMESPACE-worker \
+    --deployment-container-image-name <docker user>/worker
+az webapp config appsettings set -g $NAMESPACE-docker -n $NAMESPACE-worker --settings \
+    REDIS_HOST=<insert value from .env> \
+    REDIS_PASSWORD=<insert value from .env> \
+    REDIS_PORT=6380 \
+    POSTGRES_HOST=<insert value from .env> \
+    POSTGRES_USER=<insert value from .env> \
+    POSTGRES_PASSWORD=<insert value from .env> \
+    WEBSITES_CONTAINER_START_TIME_LIMIT=600
+az webapp config set -g $NAMESPACE-docker -n $NAMESPACE-worker --always-on true
+```
+3. After some time the two frontend applications will be available at `<namespace>-vote.azurewebsites.net` and `<namespace>-result.azurewebsites.net`
 
 Clean up resources
 ----
