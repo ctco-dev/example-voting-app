@@ -127,11 +127,25 @@ REDIS_PORT=6380
 
 ### Setup PostgreSQL
 
-TODO
+1. Create a PostgreSQL instance:
+```
+az postgres server create --resource-group $NAMESPACE-docker --name $NAMESPACE-postgresql  --location westeurope --admin-user dev --admin-password Postgres-1 --performance-tier Basic --compute-units 50 --version 9.6 --ssl-enforcement Disabled
+```
+Note the value of the `fullyQualifiedDomainName` and `name` properties.
+2. Allow to connect from any IP:
+```
+az postgres server firewall-rule create -g $NAMESPACE-docker -s $NAMESPACE-postgresql -n allowall --start-ip-address 0.0.0.0 --end-ip-address 255.255.255.255
+```
+3. Add the following contents to your `.env` file:
+```
+POSTGRES_HOST=<your fullyQualifiedDomainName>
+POSTGRES_USER=dev@<your instance name>
+POSTGRES_PASSWORD=Postgres-1
+```
 
 ### Test
 
-TODO
+Restart your applications to verify the changes.
 
 Publish the application
 ----
