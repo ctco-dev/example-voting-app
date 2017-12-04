@@ -64,7 +64,7 @@ az vm create --resource-group $NAMESPACE --name $NAMESPACE-docker --image Ubuntu
 ```
 az vm open-port -g $NAMESPACE -n $NAMESPACE-docker --port 80 --priority 900
 az vm open-port -g $NAMESPACE -n $NAMESPACE-docker --port 2375 --priority 800
-az vm open-port -g $NAMESPACE- -n $NAMESPACE-docker --port 5000-5001 --priority 700
+az vm open-port -g $NAMESPACE -n $NAMESPACE-docker --port 5000-5001 --priority 700
 ```
 5. SSH into the VM to install and run the Docker daemon:
 ```
