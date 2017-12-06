@@ -70,7 +70,7 @@ az vm open-port -g $NAMESPACE -n $NAMESPACE-docker --port 5000-5001 --priority 7
 ```
 sudo apt install aufs-tools docker.io
 systemctl stop docker
-sudo dockerd -H tcp://0.0.0.0:2375
+sudo dockerd -H tcp://127.0.0.1:2375
 ```
 6. To verify the installation, on your local machine run:
 ```
